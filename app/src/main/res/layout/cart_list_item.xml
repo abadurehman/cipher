@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/view_background_add"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/errorText">
+
+
+        <ImageView
+            android:id="@+id/add_icon"
+            android:layout_width="@dimen/ic_delete"
+            android:layout_height="@dimen/ic_delete"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/padd_10"/>
+            <!-- ADD a drawable to show add to applock />-->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/padd_10"
+            android:layout_toLeftOf="@id/add_icon"
+            android:text="ADD"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="13dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/view_background_delete"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent">
+
+        <ImageView
+            android:id="@+id/delete_icon"
+            android:layout_width="@dimen/ic_delete"
+            android:layout_height="@dimen/ic_delete"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/padd_10"/>
+        <!-- ADD a drawable to show add to applock />-->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/padd_10"
+            android:layout_toLeftOf="@id/delete_icon"
+            android:text="ADD"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="13dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/view_foreground_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:padding="@dimen/padd_10">
+
+        <com.pkmmte.view.CircularImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/thumbnail_add"
+
+            android:layout_marginLeft="14dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="12dp"
+            app:border="true"
+            app:border_color="#EEEEEE"
+            app:border_width="2dp"
+            app:shadow="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+
+        <!--<ImageView-->
+            <!--android:id="@+id/thumbnail_add"-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_marginRight="@dimen/activity_padding_horizontal"-->
+            <!--android:scaleType="centerCrop" />-->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/name_add"
+            android:textSize="16sp"
+            android:layout_marginLeft="15dp"
+            android:singleLine="true"
+            android:paddingTop="10dp"
+            android:ellipsize="marquee"
+            android:layout_alignTop="@+id/thumbnail_add"
+            android:layout_toRightOf="@+id/thumbnail_add"
+            android:layout_toEndOf="@+id/thumbnail_add" />
+
+        <!--<TextView-->
+            <!--android:id="@+id/name_add"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_toRightOf="@id/thumbnail_add"-->
+            <!--android:ellipsize="end"-->
+            <!--android:fontFamily="sans-serif-medium"-->
+            <!--android:maxLines="1"-->
+            <!--android:textColor="@color/item_name"-->
+            <!--android:textSize="17dp" />-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </RelativeLayout>
+</FrameLayout>
