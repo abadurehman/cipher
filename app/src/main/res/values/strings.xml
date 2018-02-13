@@ -41,6 +41,7 @@
 
     <string name="add_app">Add App</string>
     <string name="remove_app">Remove App</string>
+    <string name="title_activity_user_app_login">UserAppLogin</string>
 
 
 </resources>

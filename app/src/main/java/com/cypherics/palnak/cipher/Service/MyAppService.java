@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.cypherics.palnak.cipher.LoginActivty;
 import com.cypherics.palnak.cipher.SharedPreference.SharedPreference;
+import com.cypherics.palnak.cipher.UserAppLogin;
 
 import java.util.List;
 import java.util.SortedMap;
@@ -96,11 +97,14 @@ public class MyAppService extends Service {
 
 
 //
-                                        Intent intent = new Intent(this, LoginActivty.class);
+                                        Intent intent = new Intent(this, UserAppLogin.class);
                                         intent.putExtra("package", topPackageName);
 
 
                                         startActivity(intent);
+                                        getApplicationContext().sendBroadcast(new Intent("finish"));
+
+
 
 
                                     }
