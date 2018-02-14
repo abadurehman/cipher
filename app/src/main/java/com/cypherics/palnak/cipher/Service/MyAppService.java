@@ -30,13 +30,21 @@ public class MyAppService extends Service {
     List<String> lockedApp;
     private String appName;
     private String topPackageName;
+    public static String runningApp = "";
+    public static  String previousApp = "test";
+    public String myAppName = "cipher";
+
+
+
 
 
     public MyAppService() {
     }
     @Override
     public void onCreate() {
+
         context = this;
+
 
     }
     @Override
@@ -49,7 +57,6 @@ public class MyAppService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         onTaskRemoved(intent);
-
         AppListner();
 
         return START_STICKY;
@@ -65,66 +72,74 @@ public class MyAppService extends Service {
     }
 
     public void AppListner(){
-        Log.e("Running","Cypherics");
         KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
         if( myKM.inKeyguardRestrictedInputMode()) {
             stopSelf();
-        } else {
-
-                lockedApp = sharedPreference.getApp(getApplicationContext());
-
-
-                UsageStatsManager mUsageStatsManager = (UsageStatsManager)getSystemService(context.USAGE_STATS_SERVICE);
-                long time = System.currentTimeMillis();
-                // We get usage stats for the last 10 seconds
-                List<UsageStats> stats = mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000*10, time);
-                // Sort the stats by the last time used
-                if(stats != null) {
-                    SortedMap<Long,UsageStats> mySortedMap = new TreeMap<Long,UsageStats>();
-                    for (UsageStats usageStats : stats) {
-                        mySortedMap.put(usageStats.getLastTimeUsed(),usageStats);
-                    }
-                    if(!mySortedMap.isEmpty()) {
-                        topPackageName =  mySortedMap.get(mySortedMap.lastKey()).getPackageName();
-
-                        try {
-                            appName = (String) getPackageManager().
-                                    getApplicationLabel(getPackageManager().
-                                            getApplicationInfo(topPackageName, PackageManager.GET_META_DATA));
-                            for (String lockedAppUser : lockedApp){
-                                if (lockedAppUser.equals(appName)){
-                                    if (Build.VERSION.SDK_INT >= 23){
+        } else{
+            lockedApp = sharedPreference.getApp(getApplicationContext());
+            UsageStatsManager mUsageStatsManager = (UsageStatsManager)getSystemService(context.USAGE_STATS_SERVICE);
+            long time = System.currentTimeMillis();
+            List<UsageStats> stats = mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000*10, time);
 
 
-//
-                                        Intent intent = new Intent(this, UserAppLogin.class);
+            if(stats != null) {
+                SortedMap<Long,UsageStats> mySortedMap = new TreeMap<Long,UsageStats>();
+                for (UsageStats usageStats : stats) {
+                    mySortedMap.put(usageStats.getLastTimeUsed(),usageStats);
+                }
+                if(!mySortedMap.isEmpty()) {
+                    topPackageName =  mySortedMap.get(mySortedMap.lastKey()).getPackageName();
+
+                    try {
+                        appName = (String) getPackageManager().
+                                getApplicationLabel(getPackageManager().
+                                        getApplicationInfo(topPackageName, PackageManager.GET_META_DATA));
+                        runningApp = appName;
+
+                        for (String lockedAppUser : lockedApp) {
+
+                            if (lockedAppUser.equals(appName) && !runningApp.equals(previousApp) ) {
+                                if (Build.VERSION.SDK_INT >= 23 ) {
+
+
+
+                                    Intent intent = new Intent(this, UserAppLogin.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                         intent.putExtra("package", topPackageName);
 
 
                                         startActivity(intent);
-                                        getApplicationContext().sendBroadcast(new Intent("finish"));
+                                        previousApp = runningApp;
+                                }
 
 
+                            }else {
 
 
-                                    }
+                                if (!appName.matches(myAppName) && !previousApp.equals(runningApp)){
+
+                                    previousApp = "test";
 
                                 }
                             }
-                        }catch (PackageManager.NameNotFoundException exception){
-                            Log.e("exception","e");
                         }
 
-
-                        Log.e(TAG,appName);
-
+                    }catch (PackageManager.NameNotFoundException exception){
+                        exception.printStackTrace();
                     }
+
+
+
                 }
+            }
 
 
         }
-
     }
+
+
+
+
 
 
 

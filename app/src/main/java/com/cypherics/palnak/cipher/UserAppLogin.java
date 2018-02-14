@@ -7,12 +7,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cypherics.palnak.cipher.Helper.FingerprintUiHelper;
 import com.cypherics.palnak.cipher.Service.MyAppService;
+import com.cypherics.palnak.cipher.SharedPreference.SharedPreference;
 
 public class UserAppLogin extends AppCompatActivity implements FingerprintUiHelper.Callback {
     private FingerprintManager.CryptoObject mCryptoObject;
@@ -21,6 +23,10 @@ public class UserAppLogin extends AppCompatActivity implements FingerprintUiHelp
     private TextView textView;
     private Intent intent;
     private String packageName;
+    private String runningApp;
+    private SharedPreference sharedPreference=new SharedPreference();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +34,8 @@ public class UserAppLogin extends AppCompatActivity implements FingerprintUiHelp
         imageView = findViewById(R.id.fingerprint_icon);
         textView = findViewById(R.id.fingerprinterror);
         packageName = getIntent().getStringExtra("package");
+
+
 
         mFingerprintUiHelper = new FingerprintUiHelper(
                 getBaseContext().getSystemService(FingerprintManager.class),
@@ -39,13 +47,11 @@ public class UserAppLogin extends AppCompatActivity implements FingerprintUiHelp
 
     @Override
     public void onAuthenticated() {
-//        getApplicationContext().sendBroadcast(new Intent("finish"));
         intent = getPackageManager().getLaunchIntentForPackage(packageName);
 
         startActivity(intent);
         finish();
-//        stopService(new Intent(UserAppLogin.this, MyAppService.class));
-        mFingerprintUiHelper.stopListening();
+
 
     }
 

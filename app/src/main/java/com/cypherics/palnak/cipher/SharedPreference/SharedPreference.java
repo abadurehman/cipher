@@ -2,6 +2,7 @@ package com.cypherics.palnak.cipher.SharedPreference;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 
@@ -15,15 +16,15 @@ import java.util.List;
 
 public class SharedPreference {
 
-    public static final String PREFS_NAME = "PRODUCT_APP";
-    public static final String FAVORITES = "Product_Favorite";
+    private static final String PREFS_NAME = "PRODUCT_APP";
+    private static final String FAVORITES = "Product_Favorite";
 
     public SharedPreference() {
         super();
     }
 
 
-    public void saveLockedApps(Context context, List<String> lockedApps) {
+    private void saveLockedApps(Context context, List<String> lockedApps) {
         SharedPreferences settings;
         SharedPreferences.Editor editor;
 
