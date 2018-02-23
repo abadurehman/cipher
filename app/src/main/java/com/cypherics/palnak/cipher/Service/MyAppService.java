@@ -63,9 +63,18 @@ public class MyAppService extends Service {
         public void run() {
 
             if (isConcernedAppIsInForeground()){
+                Log.e("con","true");
+
                 if (!runningApp.matches(previousApp)){
                     previousApp = runningApp;
                     Log.e("on_the_way","activity_launch");
+                    try {
+                        Thread.sleep(1000);
+
+                    }catch (InterruptedException exception){
+                        exception.printStackTrace();
+
+                    }
                     Intent intent = new Intent(getApplicationContext(), UserAppLogin.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -74,6 +83,7 @@ public class MyAppService extends Service {
 
 
                     startActivity(intent);
+
                 }
             }else{
                 if (!appName.equals(myAppName)){
@@ -118,10 +128,9 @@ public class MyAppService extends Service {
 
     public boolean isConcernedAppIsInForeground() {
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> task = manager.getRunningTasks(5);
             UsageStatsManager usage = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
             long time = System.currentTimeMillis();
-            List<UsageStats> stats = usage.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, 0, time);
+            List<UsageStats> stats = usage.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 1000, time);
             if (stats != null) {
                 SortedMap<Long, UsageStats> runningTask = new TreeMap<Long, UsageStats>();
                 for (UsageStats usageStats : stats) {
