@@ -55,38 +55,9 @@ public class MyAppService extends Service {
         timer = new Timer("AppCheckServices");
         timer.schedule(updateTask, 1L, 1L);
 
-//        dThread = new Thread(Task);
-//        dThread.start();
-
-
 
     }
 
-    private  Runnable Task = new Runnable() {
-        @Override
-        public void run() {
-            if (isConcernedAppIsInForeground()){
-                if (!runningApp.matches(previousApp)){
-                    previousApp = runningApp;
-                    Log.e("on_the_way","activity_launch");
-                    Intent intent = new Intent(getApplicationContext(), UserAppLogin.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-                    intent.putExtra("package", mpackageName);
-
-
-                    startActivity(intent);
-                }
-            }else{
-                if (!appName.equals(myAppName)){
-                    Log.e("Sett",previousApp);
-                    previousApp = "";
-                }
-
-            }
-        }
-    };
     private TimerTask updateTask = new TimerTask() {
         @Override
         public void run() {
@@ -141,30 +112,7 @@ public class MyAppService extends Service {
         super.onTaskRemoved(rootIntent);
     }
 
-    public void AppListner(){
 
-        if (isConcernedAppIsInForeground()){
-            if (!runningApp.matches(previousApp)){
-                previousApp = runningApp;
-                Log.e("on_the_way","activity_launch");
-                Intent intent = new Intent(getApplicationContext(), UserAppLogin.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-                intent.putExtra("package", mpackageName);
-
-
-                startActivity(intent);
-            }
-        }else{
-            if (!appName.equals(myAppName)){
-                Log.e("Sett",previousApp);
-                previousApp = "";
-            }
-
-        }
-
-    }
 
 
 
