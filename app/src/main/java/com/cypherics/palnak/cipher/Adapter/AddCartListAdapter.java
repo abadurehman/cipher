@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,7 +21,7 @@ import java.util.List;
  */
 
 
-public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.MyViewHolder> {
+public class AddCartListAdapter extends RecyclerView.Adapter<AddCartListAdapter.MyViewHolder> {
     public Context context;
     private List<AvalaibleApps> cartList;
 
@@ -36,7 +35,7 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.MyView
             name = view.findViewById(R.id.name_add);
             thumbnail = view.findViewById(R.id.thumbnail_add);
             viewBackgroundAdd = view.findViewById(R.id.view_background_add);
-//            viewBackgroundDelete = view.findViewById(R.id.view_background_delete);
+            viewBackgroundDelete = view.findViewById(R.id.view_background_delete);
 
             viewForegroundAdd = view.findViewById(R.id.view_foreground_add);
 
@@ -44,7 +43,7 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.MyView
     }
 
 
-    public CartListAdapter(Context context, List<AvalaibleApps> cartList) {
+    public AddCartListAdapter(Context context, List<AvalaibleApps> cartList) {
         this.context = context;
         this.cartList = cartList;
     }

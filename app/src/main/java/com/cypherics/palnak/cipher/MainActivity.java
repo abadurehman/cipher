@@ -1,13 +1,10 @@
 package com.cypherics.palnak.cipher;
 
-import android.app.Activity;
 import android.app.AppOpsManager;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Movie;
 import android.os.Build;
 import android.provider.Settings;
 
@@ -23,7 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.cypherics.palnak.cipher.Adapter.CartListAdapter;
+import com.cypherics.palnak.cipher.Adapter.AddCartListAdapter;
 import com.cypherics.palnak.cipher.Helper.RecyclerItemTouchHelper;
 import com.cypherics.palnak.cipher.Listner.RecyclerTouchListener;
 import com.cypherics.palnak.cipher.Service.MyAppService;
@@ -39,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     public RecyclerView recyclerView;
     public CoordinatorLayout coordinatorLayout;
     private List<AvalaibleApps> cartList;
-    private CartListAdapter mAdapter;
+    private AddCartListAdapter mAdapter;
     private List<ApplicationInfo> installedPackages;
     private SharedPreference sharedPreference =new SharedPreference();
 
@@ -57,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         coordinatorLayout = findViewById(R.id.coordinator_layout);
 
         cartList = new ArrayList<>();
-        mAdapter = new CartListAdapter(this, cartList);
+        mAdapter = new AddCartListAdapter(this, cartList);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.addItemDecoration(new com.cypherics.palnak.cipher.DividerItemDecoration(getApplicationContext()));

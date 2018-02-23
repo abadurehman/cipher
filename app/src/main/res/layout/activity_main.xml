@@ -16,6 +16,8 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/recycle_view_layout" />
+
+    <include layout="@layout/add_app_view_layout" />
+
 
 </android.support.design.widget.CoordinatorLayout>

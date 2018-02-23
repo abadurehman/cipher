@@ -3,6 +3,7 @@ package com.cypherics.palnak.cipher;
 import android.content.Intent;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -47,6 +48,8 @@ public class UserAppLogin extends AppCompatActivity implements FingerprintUiHelp
 
     @Override
     public void onAuthenticated() {
+        Log.e("userapplogin","userapplogin");
+
         intent = getPackageManager().getLaunchIntentForPackage(packageName);
 
         startActivity(intent);

@@ -19,7 +19,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/padd_10"/>
-            <!-- ADD a drawable to show add to applock />-->
+        <!-- ADD a drawable to show add to applock />-->
 
         <TextView
             android:layout_width="wrap_content"
@@ -85,11 +85,11 @@
 
 
         <!--<ImageView-->
-            <!--android:id="@+id/thumbnail_add"-->
-            <!--android:layout_width="50dp"-->
-            <!--android:layout_height="50dp"-->
-            <!--android:layout_marginRight="@dimen/activity_padding_horizontal"-->
-            <!--android:scaleType="centerCrop" />-->
+        <!--android:id="@+id/thumbnail_add"-->
+        <!--android:layout_width="50dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_marginRight="@dimen/activity_padding_horizontal"-->
+        <!--android:scaleType="centerCrop" />-->
 
         <TextView
             android:layout_width="wrap_content"
@@ -106,15 +106,15 @@
             android:layout_toEndOf="@+id/thumbnail_add" />
 
         <!--<TextView-->
-            <!--android:id="@+id/name_add"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_toRightOf="@id/thumbnail_add"-->
-            <!--android:ellipsize="end"-->
-            <!--android:fontFamily="sans-serif-medium"-->
-            <!--android:maxLines="1"-->
-            <!--android:textColor="@color/item_name"-->
-            <!--android:textSize="17dp" />-->
+        <!--android:id="@+id/name_add"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_toRightOf="@id/thumbnail_add"-->
+        <!--android:ellipsize="end"-->
+        <!--android:fontFamily="sans-serif-medium"-->
+        <!--android:maxLines="1"-->
+        <!--android:textColor="@color/item_name"-->
+        <!--android:textSize="17dp" />-->
 
 
 

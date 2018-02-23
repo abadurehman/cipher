@@ -1,25 +1,31 @@
 package com.cypherics.palnak.cipher.Service;
 
+import android.app.ActivityManager;
 import android.app.AppOpsManager;
 import android.app.KeyguardManager;
 import android.app.Service;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.util.Log;
 
 import com.cypherics.palnak.cipher.LoginActivty;
+import com.cypherics.palnak.cipher.MainActivity;
 import com.cypherics.palnak.cipher.SharedPreference.SharedPreference;
 import com.cypherics.palnak.cipher.UserAppLogin;
 
 import java.util.List;
 import java.util.SortedMap;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.TreeMap;
 
 import static android.content.ContentValues.TAG;
@@ -29,12 +35,13 @@ public class MyAppService extends Service {
     private SharedPreference sharedPreference=new SharedPreference();
     List<String> lockedApp;
     private String appName;
-    private String topPackageName;
-    public static String runningApp = "";
+    private String mpackageName;
+    public static String runningApp = "test1";
+
     public static  String previousApp = "test";
     public String myAppName = "cipher";
-
-
+    private Timer timer;
+    private Thread dThread;
 
 
 
@@ -44,9 +51,69 @@ public class MyAppService extends Service {
     public void onCreate() {
 
         context = this;
+        lockedApp = sharedPreference.getApp(getApplicationContext());
+        timer = new Timer("AppCheckServices");
+        timer.schedule(updateTask, 1L, 1L);
+
+//        dThread = new Thread(Task);
+//        dThread.start();
+
 
 
     }
+
+    private  Runnable Task = new Runnable() {
+        @Override
+        public void run() {
+            if (isConcernedAppIsInForeground()){
+                if (!runningApp.matches(previousApp)){
+                    previousApp = runningApp;
+                    Log.e("on_the_way","activity_launch");
+                    Intent intent = new Intent(getApplicationContext(), UserAppLogin.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                    intent.putExtra("package", mpackageName);
+
+
+                    startActivity(intent);
+                }
+            }else{
+                if (!appName.equals(myAppName)){
+                    Log.e("Sett",previousApp);
+                    previousApp = "";
+                }
+
+            }
+        }
+    };
+    private TimerTask updateTask = new TimerTask() {
+        @Override
+        public void run() {
+
+            if (isConcernedAppIsInForeground()){
+                if (!runningApp.matches(previousApp)){
+                    previousApp = runningApp;
+                    Log.e("on_the_way","activity_launch");
+                    Intent intent = new Intent(getApplicationContext(), UserAppLogin.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                    intent.putExtra("package", mpackageName);
+
+
+                    startActivity(intent);
+                }
+            }else{
+                if (!appName.equals(myAppName)){
+                    Log.e("Sett",previousApp);
+                    previousApp = "";
+                }
+
+            }
+
+        }
+    };
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
@@ -54,10 +121,13 @@ public class MyAppService extends Service {
     }
 
 
+
+
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         onTaskRemoved(intent);
-        AppListner();
+//        AppListner();
 
         return START_STICKY;
     }
@@ -72,75 +142,84 @@ public class MyAppService extends Service {
     }
 
     public void AppListner(){
-        KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-        if( myKM.inKeyguardRestrictedInputMode()) {
-            stopSelf();
-        } else{
-            lockedApp = sharedPreference.getApp(getApplicationContext());
-            UsageStatsManager mUsageStatsManager = (UsageStatsManager)getSystemService(context.USAGE_STATS_SERVICE);
-            long time = System.currentTimeMillis();
-            List<UsageStats> stats = mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000*10, time);
+
+        if (isConcernedAppIsInForeground()){
+            if (!runningApp.matches(previousApp)){
+                previousApp = runningApp;
+                Log.e("on_the_way","activity_launch");
+                Intent intent = new Intent(getApplicationContext(), UserAppLogin.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                intent.putExtra("package", mpackageName);
 
 
-            if(stats != null) {
-                SortedMap<Long,UsageStats> mySortedMap = new TreeMap<Long,UsageStats>();
-                for (UsageStats usageStats : stats) {
-                    mySortedMap.put(usageStats.getLastTimeUsed(),usageStats);
-                }
-                if(!mySortedMap.isEmpty()) {
-                    topPackageName =  mySortedMap.get(mySortedMap.lastKey()).getPackageName();
-
-                    try {
-                        appName = (String) getPackageManager().
-                                getApplicationLabel(getPackageManager().
-                                        getApplicationInfo(topPackageName, PackageManager.GET_META_DATA));
-                        runningApp = appName;
-
-                        for (String lockedAppUser : lockedApp) {
-
-                            if (lockedAppUser.equals(appName) && !runningApp.equals(previousApp) ) {
-                                if (Build.VERSION.SDK_INT >= 23 ) {
-
-
-
-                                    Intent intent = new Intent(this, UserAppLogin.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        intent.putExtra("package", topPackageName);
-
-
-                                        startActivity(intent);
-                                        previousApp = runningApp;
-                                }
-
-
-                            }else {
-
-
-                                if (!appName.matches(myAppName) && !previousApp.equals(runningApp)){
-
-                                    previousApp = "test";
-
-                                }
-                            }
-                        }
-
-                    }catch (PackageManager.NameNotFoundException exception){
-                        exception.printStackTrace();
-                    }
-
-
-
-                }
+                startActivity(intent);
+            }
+        }else{
+            if (!appName.equals(myAppName)){
+                Log.e("Sett",previousApp);
+                previousApp = "";
             }
 
-
         }
+
     }
 
 
 
+    public boolean isConcernedAppIsInForeground() {
+        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> task = manager.getRunningTasks(5);
+            UsageStatsManager usage = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
+            long time = System.currentTimeMillis();
+            List<UsageStats> stats = usage.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, 0, time);
+            if (stats != null) {
+                SortedMap<Long, UsageStats> runningTask = new TreeMap<Long, UsageStats>();
+                for (UsageStats usageStats : stats) {
+                    runningTask.put(usageStats.getLastTimeUsed(), usageStats);
+                }
+                if (runningTask.isEmpty()) {
+                    Log.d(TAG,"isEmpty Yes");
+                    mpackageName = "";
+                    appName = "";
+                }else {
+                    mpackageName = runningTask.get(runningTask.lastKey()).getPackageName();
+                    try {
+                        appName = (String) getPackageManager().
+                                getApplicationLabel(getPackageManager().
+                                        getApplicationInfo(mpackageName, PackageManager.GET_META_DATA));
+
+                    }catch (PackageManager.NameNotFoundException exception){
+                        exception.printStackTrace();
+
+                    }
 
 
+                    Log.e(TAG,"isEmpty No : "+appName);
+                }
+            }
+
+
+            for (int i = 0; lockedApp != null && i < lockedApp.size(); i++) {
+                if (appName.equals(lockedApp.get(i))) {
+                    runningApp = lockedApp.get(i);
+                    return true;
+                }
+            }
+
+        return false;
+    }
+
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        timer.cancel();
+        timer = null;
+
+    }
 
 
 
