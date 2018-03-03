@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cypherics.palnak.cipher.Helper.FingerprintUiHelper;
+import com.cypherics.palnak.cipher.Service.MyAppService;
 
 public class LoginActivty extends AppCompatActivity implements  FingerprintUiHelper.Callback{
     private FingerprintManager.CryptoObject mCryptoObject;
@@ -54,6 +55,8 @@ public class LoginActivty extends AppCompatActivity implements  FingerprintUiHel
 
     @Override
     public void onAuthenticated() {
+        startService(new Intent(getApplicationContext(), MyAppService.class));
+
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

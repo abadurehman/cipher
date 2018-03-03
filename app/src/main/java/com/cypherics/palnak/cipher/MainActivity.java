@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
                 String name = cartListAdapter.getName() ;
 
                 sharedPreference.addApp(getApplicationContext(),name);
-                startService(new Intent(getApplicationContext(), MyAppService.class));
             }
 
             @Override

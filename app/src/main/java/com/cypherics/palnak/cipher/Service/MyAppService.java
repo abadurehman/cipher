@@ -137,7 +137,7 @@ public class MyAppService extends Service {
                     runningTask.put(usageStats.getLastTimeUsed(), usageStats);
                 }
                 if (runningTask.isEmpty()) {
-//                    Log.d(TAG,"isEmpty Yes");
+                    Log.d(TAG,"isEmpty Yes");
                     mpackageName = "";
                     appName = "";
                 }else {
@@ -153,7 +153,7 @@ public class MyAppService extends Service {
                     }
 
 
-//                    Log.e(TAG,"isEmpty No : "+appName);
+                    Log.e(TAG,"isEmpty No : "+appName);
                 }
             }
 

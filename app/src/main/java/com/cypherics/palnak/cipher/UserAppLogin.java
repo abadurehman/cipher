@@ -3,25 +3,18 @@ package com.cypherics.palnak.cipher;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
+
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cypherics.palnak.cipher.Helper.FingerprintUiHelper;
-import com.cypherics.palnak.cipher.Service.MyAppService;
 import com.cypherics.palnak.cipher.SharedPreference.SharedPreference;
 
-import java.util.List;
 
 public class UserAppLogin extends AppCompatActivity implements FingerprintUiHelper.Callback {
     private FingerprintManager.CryptoObject mCryptoObject;
