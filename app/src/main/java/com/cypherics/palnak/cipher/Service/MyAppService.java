@@ -78,11 +78,11 @@ public class MyAppService extends Service {
                     Intent intent = new Intent(getApplicationContext(), UserAppLogin.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
                     intent.putExtra("package", mpackageName);
 
 
                     startActivity(intent);
+
 
                 }
             }else{
@@ -137,7 +137,7 @@ public class MyAppService extends Service {
                     runningTask.put(usageStats.getLastTimeUsed(), usageStats);
                 }
                 if (runningTask.isEmpty()) {
-                    Log.d(TAG,"isEmpty Yes");
+//                    Log.d(TAG,"isEmpty Yes");
                     mpackageName = "";
                     appName = "";
                 }else {
@@ -153,7 +153,7 @@ public class MyAppService extends Service {
                     }
 
 
-                    Log.e(TAG,"isEmpty No : "+appName);
+//                    Log.e(TAG,"isEmpty No : "+appName);
                 }
             }
 

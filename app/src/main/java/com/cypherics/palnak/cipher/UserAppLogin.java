@@ -1,6 +1,9 @@
 package com.cypherics.palnak.cipher;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -9,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,6 +20,8 @@ import android.widget.TextView;
 import com.cypherics.palnak.cipher.Helper.FingerprintUiHelper;
 import com.cypherics.palnak.cipher.Service.MyAppService;
 import com.cypherics.palnak.cipher.SharedPreference.SharedPreference;
+
+import java.util.List;
 
 public class UserAppLogin extends AppCompatActivity implements FingerprintUiHelper.Callback {
     private FingerprintManager.CryptoObject mCryptoObject;
@@ -27,6 +33,29 @@ public class UserAppLogin extends AppCompatActivity implements FingerprintUiHelp
     private String runningApp;
     private SharedPreference sharedPreference=new SharedPreference();
 
+
+    @Override
+    public void onBackPressed() {
+
+        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        try {
+
+            am.killBackgroundProcesses(packageName);
+
+        }catch (NullPointerException exception){
+            exception.printStackTrace();
+        }
+
+        Log.e("Killing",packageName);
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
+        startMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
+        finish();
+//        mActivityManager.killBackgroundProcesses(packageName);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +77,11 @@ public class UserAppLogin extends AppCompatActivity implements FingerprintUiHelp
 
     @Override
     public void onAuthenticated() {
-        Log.e("userapplogin","userapplogin");
+        Log.e("userapplogin",packageName);
 
         intent = getPackageManager().getLaunchIntentForPackage(packageName);
-
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
+         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
 
