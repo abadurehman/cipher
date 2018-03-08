@@ -1,6 +1,8 @@
 package com.cypherics.palnak.cipher;
 
+import android.app.Activity;
 import android.app.AppOpsManager;
+import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -23,6 +25,7 @@ import android.widget.Toast;
 import com.cypherics.palnak.cipher.Adapter.AddCartListAdapter;
 import com.cypherics.palnak.cipher.Helper.RecyclerItemTouchHelper;
 import com.cypherics.palnak.cipher.Listner.RecyclerTouchListener;
+import com.cypherics.palnak.cipher.Manager.PolicyManager;
 import com.cypherics.palnak.cipher.Service.MyAppService;
 import com.cypherics.palnak.cipher.SharedPreference.SharedPreference;
 
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private AddCartListAdapter mAdapter;
     private List<ApplicationInfo> installedPackages;
     private SharedPreference sharedPreference =new SharedPreference();
+    private PolicyManager policyManager;
 
 
 
@@ -48,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        policyManager = new PolicyManager(this);
+
 
 
         recyclerView = findViewById(R.id.recycle_view);
@@ -55,6 +61,20 @@ public class MainActivity extends AppCompatActivity {
 
         cartList = new ArrayList<>();
         mAdapter = new AddCartListAdapter(this, cartList);
+
+        if (!policyManager.isAdminActive()) {
+            Intent activateDeviceAdmin = new Intent(
+                    DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+            activateDeviceAdmin.putExtra(
+                    DevicePolicyManager.EXTRA_DEVICE_ADMIN,
+                    policyManager.getAdminComponent());
+            activateDeviceAdmin
+                    .putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,
+                            "After activating admin, you will be able to block application uninstallation.");
+            startActivityForResult(activateDeviceAdmin,
+                    PolicyManager.DPM_ACTIVATION_REQUEST_CODE);
+        }
+
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.addItemDecoration(new com.cypherics.palnak.cipher.DividerItemDecoration(getApplicationContext()));
@@ -68,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 AvalaibleApps cartListAdapter = cartList.get(position);
                 Toast.makeText(getApplicationContext(), cartListAdapter.getName() + " is selected!", Toast.LENGTH_SHORT).show();
                 String name = cartListAdapter.getName() ;
-
+                Log.e("Adding-",name);
                 sharedPreference.addApp(getApplicationContext(),name);
             }
 
@@ -141,6 +161,10 @@ public class MainActivity extends AppCompatActivity {
                     AvalaibleApps avalaibleApps=new AvalaibleApps(packageInfo.loadLabel(getApplicationContext().getPackageManager()).toString(),packageInfo.loadIcon(getApplicationContext().getPackageManager()));
                     cartList.add(avalaibleApps);
                 }
+                if (packageInfo.loadLabel(getApplicationContext().getPackageManager()).toString().equals("Settings")){
+                    AvalaibleApps avalaibleApps=new AvalaibleApps(packageInfo.loadLabel(getApplicationContext().getPackageManager()).toString(),packageInfo.loadIcon(getApplicationContext().getPackageManager()));
+                    cartList.add(avalaibleApps);
+                }
                 // System application
             } else {
                 // Installed by user
@@ -156,6 +180,19 @@ public class MainActivity extends AppCompatActivity {
 
         // refreshing recycler view
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        if (resultCode == Activity.RESULT_OK
+                && requestCode == PolicyManager.DPM_ACTIVATION_REQUEST_CODE) {
+            sharedPreference.addApp(getApplicationContext(),"Settings");
+
+            Log.e("succes","admin");
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
 }

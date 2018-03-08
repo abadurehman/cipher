@@ -153,7 +153,7 @@ public class MyAppService extends Service {
                     }
 
 
-                    Log.e(TAG,"isEmpty No : "+appName);
+//                    Log.e(TAG,"isEmpty No : "+mpackageName);
                 }
             }
 
