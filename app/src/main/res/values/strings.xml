@@ -31,7 +31,7 @@
     <string name="description_fingerprint_icon">Fingerprint icon</string>
     <string name="title_activity_login_activty">LoginActivty</string>
 
-
+    <string name="service_label">NotificationListenerService</string>
     <string name="title_fingerprint">One-touch Sign In</string>
     <string name="desc_fingerprint">Touch the sensor</string>
     <string name="note">(Fingerprint sign in makes your app login much faster. Your device should have at least one fingerprint registered in device settings)</string>

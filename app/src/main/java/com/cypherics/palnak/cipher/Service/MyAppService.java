@@ -1,24 +1,17 @@
 package com.cypherics.palnak.cipher.Service;
 
 import android.app.ActivityManager;
-import android.app.AppOpsManager;
-import android.app.KeyguardManager;
 import android.app.Service;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
-import android.content.ComponentName;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.IBinder;
-import android.os.SystemClock;
-import android.provider.Settings;
 import android.util.Log;
 
-import com.cypherics.palnak.cipher.LoginActivty;
-import com.cypherics.palnak.cipher.MainActivity;
 import com.cypherics.palnak.cipher.SharedPreference.SharedPreference;
 import com.cypherics.palnak.cipher.UserAppLogin;
 
@@ -30,7 +23,7 @@ import java.util.TreeMap;
 
 import static android.content.ContentValues.TAG;
 
-public class MyAppService extends Service {
+public class MyAppService extends Service   {
     private Context context;
     private SharedPreference sharedPreference=new SharedPreference();
     List<String> lockedApp;
@@ -41,7 +34,8 @@ public class MyAppService extends Service {
     public static  String previousApp = "test";
     public String myAppName = "cipher";
     private Timer timer;
-    private Thread dThread;
+    private NotificationBroadcastReceiver notificationBroadcastReceiver;
+    private int receivedNotificationCode = 3;
 
 
 
@@ -51,9 +45,12 @@ public class MyAppService extends Service {
     public void onCreate() {
 
         context = this;
-        lockedApp = sharedPreference.getApp(getApplicationContext());
+        notificationBroadcastReceiver = new NotificationBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.github.chagall.notificationlistenerexample");
+        registerReceiver(notificationBroadcastReceiver,intentFilter);
         timer = new Timer("AppCheckServices");
-        timer.schedule(updateTask, 1L, 1L);
+        timer.schedule(updateTask,  800, 500);
 
 
     }
@@ -61,20 +58,16 @@ public class MyAppService extends Service {
     private TimerTask updateTask = new TimerTask() {
         @Override
         public void run() {
+            lockedApp = sharedPreference.getApp(getApplicationContext());
+            Log.e("code " ,Integer.toString(receivedNotificationCode));
 
             if (isConcernedAppIsInForeground()){
                 Log.e("con","true");
 
-                if (!runningApp.matches(previousApp)){
+                if (!runningApp.matches(previousApp) ){
                     previousApp = runningApp;
                     Log.e("on_the_way","activity_launch");
-                    try {
-                        Thread.sleep(1000);
 
-                    }catch (InterruptedException exception){
-                        exception.printStackTrace();
-
-                    }
                     Intent intent = new Intent(getApplicationContext(), UserAppLogin.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -86,6 +79,7 @@ public class MyAppService extends Service {
 
                 }
             }else{
+                receivedNotificationCode = 3;
                 if (!appName.equals(myAppName)){
                     Log.e("Sett",previousApp);
                     previousApp = "";
@@ -108,7 +102,6 @@ public class MyAppService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         onTaskRemoved(intent);
-//        AppListner();
 
         return START_STICKY;
     }
@@ -127,7 +120,19 @@ public class MyAppService extends Service {
 
 
     public boolean isConcernedAppIsInForeground() {
-        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        if (receivedNotificationCode == 1){
+            Log.e("not","false");
+            try {
+                Thread.sleep(10000);
+
+            }catch (InterruptedException exception){
+                exception.printStackTrace();
+
+            }
+            return false;
+        }
+        else {
+            ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
             UsageStatsManager usage = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
             long time = System.currentTimeMillis();
             List<UsageStats> stats = usage.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 1000, time);
@@ -161,11 +166,14 @@ public class MyAppService extends Service {
             for (int i = 0; lockedApp != null && i < lockedApp.size(); i++) {
                 if (appName.equals(lockedApp.get(i))) {
                     runningApp = lockedApp.get(i);
+                    Log.e("Locked APP",runningApp);
                     return true;
                 }
             }
 
-        return false;
+            return false;
+        }
+
     }
 
 
@@ -175,7 +183,18 @@ public class MyAppService extends Service {
         super.onDestroy();
         timer.cancel();
         timer = null;
+        unregisterReceiver(notificationBroadcastReceiver);
 
+
+    }
+
+
+
+    public class NotificationBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+             receivedNotificationCode = intent.getIntExtra("Notification Code",-1);
+        }
     }
 
 

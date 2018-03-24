@@ -1,8 +1,10 @@
 package com.cypherics.palnak.cipher;
 
 import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Bundle;
 
@@ -23,8 +25,6 @@ public class UserAppLogin extends AppCompatActivity implements FingerprintUiHelp
     private TextView textView;
     private Intent intent;
     private String packageName;
-    private String runningApp;
-    private SharedPreference sharedPreference=new SharedPreference();
 
 
     @Override
@@ -60,6 +60,7 @@ public class UserAppLogin extends AppCompatActivity implements FingerprintUiHelp
 
 
 
+
         mFingerprintUiHelper = new FingerprintUiHelper(
                 getBaseContext().getSystemService(FingerprintManager.class),
                 textView, this);
@@ -85,4 +86,6 @@ public class UserAppLogin extends AppCompatActivity implements FingerprintUiHelp
     public void onError() {
 
     }
+
+
 }

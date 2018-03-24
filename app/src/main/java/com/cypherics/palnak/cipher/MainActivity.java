@@ -187,7 +187,6 @@ public class MainActivity extends AppCompatActivity {
         // TODO Auto-generated method stub
         if (resultCode == Activity.RESULT_OK
                 && requestCode == PolicyManager.DPM_ACTIVATION_REQUEST_CODE) {
-            sharedPreference.addApp(getApplicationContext(),"Settings");
 
             Log.e("succes","admin");
         } else {
